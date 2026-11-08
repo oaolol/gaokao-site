@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>河北高考 · 985/211/双一流 分专业录取线（2024-2026）</title>
+<style>
+:root{
+  --bg:#f4f6f9; --card:#fff; --line:#e3e7ee; --text:#16202f; --muted:#69748a;
+  --accent:#1d4ed8; --accent-soft:#eef3ff;
+  --b985-bg:#fdeaea; --b985-fg:#b91c1c;
+  --b211-bg:#fdf1de; --b211-fg:#a16207;
+  --bsyl-bg:#e4f7f2; --bsyl-fg:#0f766e;
+  --chong:#b91c1c; --wen:#0f766e; --bao:#1d4ed8;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+
+/* 头部 */
+.hero{background:linear-gradient(160deg,#1e3a8a 0%,#1d4ed8 55%,#2563eb 100%);color:#fff;padding:34px 0 76px;margin-bottom:-46px}
+.hero h1{margin:0;font-size:25px;font-weight:650;letter-spacing:.3px}
+.hero p{margin:8px 0 0;color:#c7d7ff;font-size:13.5px}
+.hero p #chipN{opacity:.8}
+.hero .chips{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+.hero .chips span{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:4px 11px;font-size:12.5px;color:#eaf0ff}
+
+/* 筛选卡 */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 24px rgba(23,37,84,.07);padding:16px 18px;position:relative;z-index:2}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px 14px;align-items:end}
+.fld{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fld label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.3px}
+.seg{display:flex;background:#f1f3f7;border:1px solid var(--line);border-radius:9px;padding:3px;gap:2px}
+.seg button{flex:1;border:0;background:transparent;padding:7px 6px;border-radius:7px;font-size:13.5px;color:#4b5563;cursor:pointer;white-space:nowrap;transition:.15s}
+.seg button:hover{background:#e7ebf3}
+.seg button.on{background:#fff;color:var(--accent);font-weight:650;box-shadow:0 1px 4px rgba(23,37,84,.12)}
+input[type=text],input[type=number],select{width:100%;border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 10px;font-size:14px;color:var(--text);outline:none;transition:.15s;font-family:inherit}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.row2{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;align-items:flex-end}
+.row2 .fld{width:150px}
+.row2 .hint{padding-bottom:9px}
+.row2 .acts{margin-left:auto;display:flex;gap:10px;padding-bottom:1px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 14px;font-size:13.5px;cursor:pointer;color:#374151;font-family:inherit}
+.btn:hover{background:#f7f9fc}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary:hover{background:#1a45c0}
+.hint{font-size:12.5px;color:var(--muted)}
+
+/* 分数反查结果条 */
+.banner{display:none;background:linear-gradient(120deg,#eef3ff,#f8fbff);border:1px solid #d9e3ff;border-radius:14px;padding:14px 18px;margin:16px 0 0;position:relative;z-index:2}
+.banner.on{display:block}
+.banner .b1{font-size:15px;font-weight:650;color:#16202f}
+.banner .b1 em{font-style:normal;color:var(--accent);font-size:21px;font-weight:700;margin:0 3px;letter-spacing:.4px}
+.banner .b1 .ys{font-size:12.5px;font-weight:400;color:var(--muted);margin-left:6px}
+.banner .b2{margin-top:8px;font-size:13px;color:#3f4a5a;line-height:2}
+.banner .zbtn{display:inline-flex;align-items:center;gap:5px;border:1px solid #d9e3ff;background:#fff;border-radius:999px;padding:2px 12px;margin-right:7px;font-size:12.5px;cursor:pointer;font-family:inherit;color:#374151;transition:.15s}
+.banner .zbtn:hover{border-color:#b9caf5}
+.banner .zbtn.on{border-color:var(--accent);color:var(--accent);font-weight:650;box-shadow:0 0 0 3px var(--accent-soft)}
+.banner .zbtn i{font-style:normal;font-weight:700}
+.banner .zbtn.z-chong i{color:var(--chong)}
+.banner .zbtn.z-wen i{color:var(--wen)}
+.banner .zbtn.z-bao i{color:var(--bao)}
+.banner .b2 b{color:#16202f}
+
+/* 统计条 */
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 12px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:10px 14px;min-width:104px}
+.stat b{display:block;font-size:19px;font-weight:680;letter-spacing:.2px}
+.stat span{font-size:12px;color:var(--muted)}
+
+/* 表格 */
+.tablecard{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 4px 18px rgba(23,37,84,.05)}
+.tscroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:1140px}
+thead th{position:sticky;top:0;background:#f8fafc;border-bottom:1px solid var(--line);text-align:left;padding:11px 12px;font-size:12.5px;color:#54606f;font-weight:650;white-space:nowrap;cursor:pointer;user-select:none;z-index:1}
+thead th:hover{background:#eef2f8}
+thead th .ar{color:#9aa4b5;margin-left:4px;font-size:11px}
+thead th.act{color:var(--accent)}
+thead th.act .ar{color:var(--accent)}
+tbody td{padding:10px 12px;border-bottom:1px solid #f0f2f6;vertical-align:middle}
+tbody tr:hover{background:#fafbfe}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.sc{font-weight:680;font-size:15px}
+td.rt{color:#0f766e;font-weight:650}
+td.rt .coh{display:block;font-size:10.5px;color:#98a1b0;font-weight:400;letter-spacing:.2px;line-height:1.2}
+td.rt .bh{color:#b45309}
+.rt-legend{font-size:12px;color:var(--muted);margin-top:8px}
+td.mj{max-width:340px;color:#28323f}
+td.sch{font-weight:600;white-space:nowrap}
+td.pv,td.ct{white-space:nowrap;color:#4b5563;font-size:13.5px}
+td.ct{color:#28323f}
+td.sch>span.nm{display:inline-block;max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
+.badge{display:inline-block;font-size:11.5px;padding:1px 7px;border-radius:5px;font-weight:650;white-space:nowrap}
+.b0{background:var(--b985-bg);color:var(--b985-fg)}
+.b1{background:var(--b211-bg);color:var(--b211-fg)}
+.b2{background:var(--bsyl-bg);color:var(--bsyl-fg)}
+.tag{font-size:11.5px;padding:1px 6px;border-radius:4px;margin-left:6px;white-space:nowrap}
+.t-chong{background:#fdeaea;color:var(--chong)}
+.t-wen{background:#e4f7f2;color:var(--wen)}
+.t-bao{background:#eef3ff;color:var(--bao)}
+tr.clickable{cursor:pointer}
+.empty{padding:52px 20px;text-align:center;color:var(--muted);font-size:14px}
+
+/* 分页 */
+.pager{display:flex;gap:8px;align-items:center;justify-content:center;padding:14px;flex-wrap:wrap;border-top:1px solid var(--line);background:#fbfcfe}
+.pager .pg{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 11px;cursor:pointer;font-size:13px;color:#374151;font-family:inherit}
+.pager .pg.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pager .pg:disabled{opacity:.45;cursor:default}
+.pager .info{font-size:12.5px;color:var(--muted);margin:0 6px}
+
+/* 弹窗 */
+.mask{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:18px}
+.mask.on{display:flex}
+.modal{background:#fff;border-radius:16px;max-width:760px;width:100%;max-height:86vh;overflow:auto;box-shadow:0 24px 60px rgba(15,23,42,.28)}
+.modal h3{margin:0;padding:18px 20px 4px;font-size:17px}
+.modal .sub{padding:0 20px 14px;color:var(--muted);font-size:13px;border-bottom:1px solid var(--line)}
+.modal .body{padding:14px 20px 20px}
+.modal table{min-width:0;font-size:13.5px}
+.modal thead th{position:static;background:#f8fafc;cursor:default}
+.close{position:absolute;right:16px;top:14px;border:0;background:#f1f3f7;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:16px;color:#4b5563}
+.modalwrap{position:relative}
+
+/* 说明 */
+.note{margin:26px 0 44px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.note h4{margin:0 0 10px;font-size:15px}
+.note p,.note li{font-size:13.5px;color:#4b5563;margin:6px 0}
+.note code{background:#f1f3f7;padding:1px 5px;border-radius:4px;font-size:12.5px}
+.note ul{margin:6px 0 0;padding-left:20px}
+.foot{text-align:center;color:#98a1b0;font-size:12.5px;padding-bottom:30px}
+@media(max-width:720px){
+  .hero{padding:24px 0 56px;margin-bottom:-34px}
+  .hero h1{font-size:20px}
+  .hero p{font-size:12.5px}
+  .stats{gap:8px}
+  .stat{flex:1 1 44%;min-width:0;padding:9px 11px}
+  .stat b{font-size:17px}
+  /* 固定宽度在窄屏会撑破容器，这里统一改成整行 */
+  .filters{grid-template-columns:1fr 1fr}
+  .filters .fld,.row2 .fld{width:100%!important}
+  .row2 .acts{width:100%;margin-left:0;justify-content:flex-end}
+  .seg button{padding:7px 2px;font-size:12.5px}
+  .panel{padding:14px}
+  .banner{padding:12px 14px}
+  .banner .b1{font-size:14px}
+  .banner .b1 em{font-size:18px}
+  .banner .b2{font-size:12.5px;line-height:2.1}
+  /* 窄屏放不下 9 列：省份列收起（城市列保留，定位足够），其余仍可横向滚动 */
+  table{min-width:880px}
+  th.pv,td.pv{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>河北高考 · 名校分专业录取线</h1>
+    <p>985 / 211 / 双一流高校在河北省的本科批分专业投档最低分、全省位次、招生人数、保研率<span id="chipN"></span></p>
+    <div class="chips">
+      <span>2024 · 2025 · 2026 三年</span>
+      <span>物理 / 历史双科类</span>
+      <span>按一分一段表换算位次</span>
+      <span>分数反查能上哪些学校</span>
+      <span>按省份 / 城市筛选</span>
+      <span>附 26 / 25 届保研率</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="panel">
+    <div class="filters">
+      <div class="fld">
+        <label>年份</label>
+        <div class="seg" id="segYear">
+          <button data-v="all" class="on">全部</button>
+          <button data-v="0">2024</button>
+          <button data-v="1">2025</button>
+          <button data-v="2">2026</button>
+        </div>
+      </div>
+      <div class="fld">
+        <label>科类</label>
+        <div class="seg" id="segTrack">
+          <button data-v="0" class="on">物理</button>
+          <button data-v="1">历史</button>
+        </div>
+      </div>
+      <div class="fld">
+        <label>院校层次</label>
+        <div class="seg" id="segTier">
+          <button data-v="all" class="on">全部</button>
+          <button data-v="0">985</button>
+          <button data-v="1">211</button>
+          <button data-v="2">双一流</button>
+        </div>
+      </div>
+      <div class="fld">
+        <label>省份</label>
+        <select id="selProv"><option value="all">全部省份</option></select>
+      </div>
+      <div class="fld">
+        <label>城市</label>
+        <select id="selCity"><option value="all">全部城市</option></select>
+      </div>
+      <div class="fld">
+        <label>院校</label>
+        <input type="text" id="qSchool" list="schoolList" placeholder="输入校名，如 清华">
+        <datalist id="schoolList"></datalist>
+      </div>
+      <div class="fld">
+        <label>专业关键词</label>
+        <input type="text" id="qMajor" placeholder="如 计算机 / 临床医学">
+      </div>
+    </div>
+    <div class="row2">
+      <div class="fld" style="width:128px">
+        <label>我的分数（可选）</label>
+        <input type="number" id="qScore" min="0" max="750" placeholder="如 620">
+      </div>
+      <div class="fld" style="width:128px">
+        <label>我的位次 <span class="hint" style="font-weight:400">自动换算</span></label>
+        <input type="number" id="qRank" min="1" placeholder="全省位次">
+      </div>
+      <div class="fld" style="width:296px">
+        <label>报考把握</label>
+        <div class="seg" id="segZone">
+          <button data-v="can" class="on">可报</button>
+          <button data-v="chong">冲</button>
+          <button data-v="wen">稳</button>
+          <button data-v="bao">保</button>
+          <button data-v="all">全部</button>
+        </div>
+      </div>
+      <div class="fld" style="width:186px">
+        <label>显示方式</label>
+        <div class="seg" id="segView">
+          <button data-v="major" class="on">专业明细</button>
+          <button data-v="school">院校汇总</button>
+        </div>
+      </div>
+      <div class="acts">
+        <button class="btn" id="btnReset">清空条件</button>
+        <button class="btn primary" id="btnQuery">查询</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="banner" id="banner"></div>
+
+  <div class="stats">
+    <div class="stat"><b id="stCount">—</b><span>符合条件的专业</span></div>
+    <div class="stat"><b id="stSchool">—</b><span>涉及院校</span></div>
+    <div class="stat"><b id="stTop">—</b><span>最高投档分</span></div>
+    <div class="stat"><b id="stLow">—</b><span>最低投档分</span></div>
+  </div>
+
+  <div class="tablecard">
+    <div class="tscroll" id="wrapMajor">
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th data-k="year">年份<span class="ar">⇅</span></th>
+            <th data-k="school">院校<span class="ar">⇅</span></th>
+            <th data-k="prov" class="pv">省份<span class="ar">⇅</span></th>
+            <th data-k="city">城市<span class="ar">⇅</span></th>
+            <th data-k="tier">层次<span class="ar">⇅</span></th>
+            <th data-k="major">专业<span class="ar">⇅</span></th>
+            <th data-k="score" style="text-align:right">最低分<span class="ar">⇅</span></th>
+            <th data-k="rank" style="text-align:right">全省位次<span class="ar">⇅</span></th>
+            <th data-k="plan" style="text-align:right">招生人数<span class="ar">⇅</span></th>
+            <th data-k="rate" style="text-align:right">保研率<span class="ar">⇅</span></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="tscroll" id="wrapSchool" style="display:none">
+      <table id="tblS">
+        <thead>
+          <tr>
+            <th>院校</th>
+            <th class="pv">省份</th>
+            <th>城市</th>
+            <th>层次</th>
+            <th style="text-align:right">最低投档分</th>
+            <th style="text-align:right">对应位次</th>
+            <th style="text-align:right">专业数</th>
+            <th style="text-align:right">保研率</th>
+            <th style="text-align:right">分数年份</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyS"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="empty" style="display:none">没有匹配的记录，换个条件试试。</div>
+    <div class="pager" id="pager"></div>
+  </div>
+
+  <div class="note">
+    <h4>数据说明</h4>
+    <ul>
+      <li><b>分数与位次</b>：河北省教育考试院《本科批平行志愿投档情况统计》，分专业投档最低分。位次按当年河北省<b>一分一段表</b>把分数换算为累计人数（即该分数最后一名考生的全省位次）。</li>
+      <li><b>2025 年</b>分数、位次、招生人数取自公开数据集；<b>2024 / 2026</b>年官方投档表只公布分数，招生人数官方未随投档表公布，故显示为「—」。</li>
+      <li>「招生人数」为录取人数口径，含普通类计划；不含提前批、专项计划、艺术类、中外合作办学的单独批次（中外合作办学专业仍可能出现在本科批内）。</li>
+      <li>同一院校的<b>分校、校区、医学部</b>（如北京大学医学部、哈尔滨工业大学(威海)）按独立招生单位单独列出，与本部不可混用。</li>
+      <li><b>省份 / 城市</b>：按招生单位的<b>实际所在地</b>记，分校、校区记在其所在地——哈尔滨工业大学(威海) → 山东威海、哈尔滨工业大学(深圳) → 广东深圳、大连理工大学(盘锦校区) → 辽宁盘锦。<b>河北工业大学在天津</b>，校名带「河北」但校址一直在天津，本表按天津记。直辖市省市同名。只到省市两级，不含街道门牌。</li>
+      <li><b>投档线=该专业最后一名被投档考生的分数</b>，不等于录取线，也不代表一定能被录取；同分考生按语数之和、外语等顺序排序。</li>
+      <li><b>按分数反查</b>：输入你的分数，页面用<b>所选定年份的一分一段表</b>把它换算成全省位次，再与各专业的最低位次比较。年份选「全部」时按 2026 年表换算。<b>跨年份请以位次为准</b>——不同年份题目难度不同，分数不可直接比较。</li>
+      <li><b>冲 / 稳 / 保 口径</b>：某专业最低位次比你的位次更靠前记「冲」（要发挥超常才有戏）；与你的位次相当、到下浮 25% 以内记「稳」；比你的位次低 25% 以上记「保」。「稳 + 保」合计即通常说的「有把握」范围。</li>
+      <li><b>保研率</b>：推免名额 ÷ 应届本科毕业生，为<b>院校级</b>指标，同一所学校的各专业共用同一个数（本科专业之间的实际推免差异体现在校内名额分配上，官方不公布分专业名额）。数据来自「学子数据」公众号汇总的各校 2026 届 / 2025 届推免公示，<b>26 届未公示的院校用 25 届数据</b>，标注为「25届」。<b>带「·本部」</b>的是该校区 / 分校未单列保研率、借用校本部数据的参考值，不可与本校等同看待。各校统计口径不一（是否含强基转段、支教团、专项计划，分母是否剔除定向生），横向比较仅供参考。</li>
+    </ul>
+  </div>
+  <div class="foot">数据仅作志愿参考，最终以河北省教育考试院与各高校官方公布为准。</div>
+</div>
+
+<div class="mask" id="mask">
+  <div class="modalwrap" style="max-width:760px;width:100%">
+    <div class="modal">
+      <button class="close" id="btnClose">×</button>
+      <h3 id="mTitle"></h3>
+      <div class="sub" id="mSub"></div>
+      <div class="body" id="mBody"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PER = 60;
+const ZONE_TXT = {chong:'冲', wen:'稳', bao:'保'};
+const ZONE_CLS = {chong:'t-chong', wen:'t-wen', bao:'t-bao'};
+
+const state = {
+  year:'all', track:0, tier:'all', prov:'all', city:'all', school:'', major:'',
+  myScore:null, myRank:null, zone:'can', view:'major',
+  sort:{k:'rank',d:1}, page:1
+};
+let DATA=null, ROWS=null, SEG={}, GEO={provs:[], cities:{}};
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt = n => n ? n.toLocaleString('zh-CN') : '—';
+// 直辖市省市同名，拼起来只显示一次
+const place = r => (r.prov===r.city ? r.prov : r.prov+r.city);
+const TIER = ['985','211','双一流'];
+const COH = ['26届','25届'];
+
+// 保研率：[百分比, 届别, 口径] —— 口径 1 表示该校区未单列、借用校本部，显示加 *
+function rateOf(si){
+  const v = (DATA.rates||[])[si];
+  return v ? {rate:v[0], coh:v[1], base:v[2]===1} : null;
+}
+function rateCell(rt){
+  if(!rt) return '<td class="num rt">—</td>';
+  const note = COH[rt.coh] || '';
+  const tip = rt.base ? '该校区未单列保研率，借用校本部数据' : '保研率 = 推免名额 ÷ 应届本科毕业生';
+  return `<td class="num rt" title="${tip}">${rt.rate.toFixed(2)}%`
+       + `<span class="coh">${note}${rt.base?'<span class="bh">·本部</span>':''}</span></td>`;
+}
+function rateText(rt){
+  if(!rt) return '—';
+  return rt.rate.toFixed(2)+'%（'+(COH[rt.coh]||'')+(rt.base?'·借用校本部':'')+'）';
+}
+
+fetch('data.json?v=20261105a').then(r=>r.json()).then(d=>{
+  DATA = d;
+  const CT = d.cities || [];
+  ROWS = d.rows.map(r=>{
+    const s = d.schools[r[2]];
+    const c = CT[s[2]] || ['—','—'];
+    const rt = rateOf(r[2]);
+    return {year:d.years[r[0]], track:d.tracks[r[1]], school:s[0],
+      prov:c[0], city:c[1], si:r[2], rt,
+      tier:TIER[s[1]], major:d.majors[r[3]], score:r[4], rank:r[5], plan:r[6],
+      rate: rt ? rt.rate : 0};
+  });
+  (d.seg||[]).forEach(g=>{ SEG[g[0]+'_'+g[1]] = {ks:g[2], rk:g[3]}; });
+  $('#chipN').textContent = ' · 共 ' + ROWS.length.toLocaleString('zh-CN') + ' 条记录';
+  const names=[...new Set(ROWS.map(r=>r.school))].sort((a,b)=>a.localeCompare(b,'zh'));
+  $('#schoolList').innerHTML = names.map(n=>`<option value="${esc(n)}">`).join('');
+  initGeo(); fillProv(); fillCity();
+  render();
+}).catch(e=>{
+  $('#empty').style.display='block';
+  $('#empty').textContent='数据加载失败：'+e.message;
+});
+
+/* ---------- 分数 → 位次（一分一段表） ---------- */
+function segYear(){
+  return state.year==='all' ? DATA.years.length-1 : state.year;
+}
+function lowerBound(arr,v){
+  let lo=0, hi=arr.length;
+  while(lo<hi){ const m=(lo+hi)>>1; if(arr[m]<v) lo=m+1; else hi=m; }
+  return lo;
+}
+function rankOfScore(score){
+  const g = SEG[segYear()+'_'+state.track];
+  if(!g || !g.ks.length) return null;
+  const ks=g.ks, rk=g.rk;
+  if(score > ks[ks.length-1]) return rk[rk.length-1];  // 高于最高档，按合并档处理
+  if(score < ks[0]) return null;                       // 低于分段表下限
+  const i = lowerBound(ks, score);
+  return (i<ks.length && ks[i]===score) ? rk[i] : null;
+}
+function applyScore(){
+  if(!state.myScore){ return; }   // 手填位次时不动
+  const R = rankOfScore(Math.round(state.myScore));
+  state.myRank = R || null;
+  $('#qRank').value = R || '';
+}
+
+/* ---------- 控件 ---------- */
+function bindSeg(id, key, conv){
+  const box=$(id);
+  box.addEventListener('click', e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    [...box.children].forEach(x=>x.classList.toggle('on', x===b));
+    state[key] = conv ? conv(b.dataset.v) : b.dataset.v;
+    state.page = 1;
+    if(key==='year' || key==='track') applyScore();
+    render();
+  });
+}
+bindSeg('#segYear','year',   v=> v==='all'?'all':+v);
+bindSeg('#segTrack','track', v=> +v);
+bindSeg('#segTier','tier',   v=> v==='all'?'all':+v);
+bindSeg('#segZone','zone');
+bindSeg('#segView','view');
+
+/* ---------- 省份 / 城市筛选 ---------- */
+function initGeo(){
+  const prov = new Map(), cities = new Map();
+  ROWS.forEach(r=>{
+    if(!prov.has(r.prov)) prov.set(r.prov, new Set());
+    prov.get(r.prov).add(r.school);
+    if(!cities.has(r.prov)) cities.set(r.prov, new Map());
+    const c = cities.get(r.prov);
+    if(!c.has(r.city)) c.set(r.city, new Set());
+    c.get(r.city).add(r.school);
+  });
+  GEO.cities = cities;
+  // 学校多的省份排前面；同数量按名称；境外校区单独排最后
+  const abroad = p => (p==='马来西亚'||p==='芬兰') ? 1 : 0;
+  GEO.provs = [...prov.keys()].sort((a,b)=>
+    abroad(a)-abroad(b) || prov.get(b).size-prov.get(a).size || a.localeCompare(b,'zh'));
+}
+
+function fillProv(){
+  const sel=$('#selProv');
+  sel.innerHTML = '<option value="all">全部省份</option>' +
+    GEO.provs.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');
+  sel.value = state.prov;
+}
+
+function fillCity(){
+  const sel=$('#selCity');
+  let list=[];
+  if(state.prov==='all'){
+    // 没选省份时列出全部城市，前缀省份避免重名歧义
+    GEO.provs.forEach(p=>{
+      [...GEO.cities.get(p).entries()]
+        .sort((a,b)=> b[1].size-a[1].size || a[0].localeCompare(b[0],'zh'))
+        .forEach(([c])=> list.push([c, p+' · '+c]));
+    });
+  }else{
+    const m=GEO.cities.get(state.prov)||new Map();
+    list=[...m.entries()]
+      .sort((a,b)=> b[1].size-a[1].size || a[0].localeCompare(b[0],'zh'))
+      .map(([c])=> [c, c]);
+  }
+  sel.innerHTML='<option value="all">全部城市</option>' +
+    list.map(([v,t])=>`<option value="${esc(v)}">${esc(t)}</option>`).join('');
+  sel.value='all';
+}
+
+$('#selProv').addEventListener('change', e=>{
+  state.prov = e.target.value;
+  state.city = 'all';
+  fillCity();
+  state.page = 1; render();
+});
+$('#selCity').addEventListener('change', e=>{
+  state.city = e.target.value;
+  state.page = 1; render();
+});
+
+$('#qSchool').addEventListener('input', e=>{ state.school=e.target.value.trim(); state.page=1; render(); });
+$('#qMajor').addEventListener('input', e=>{ state.major=e.target.value.trim(); state.page=1; render(); });
+
+$('#qScore').addEventListener('input', e=>{
+  const v = parseFloat(e.target.value);
+  state.myScore = (v>0) ? v : null;
+  if(!state.myScore){ state.myRank=null; $('#qRank').value=''; }
+  else applyScore();
+  state.page=1; render();
+});
+$('#qRank').addEventListener('input', e=>{
+  const v = +e.target.value;
+  if(v>0){ state.myRank=v; state.myScore=null; $('#qScore').value=''; }
+  else { state.myRank=null; }
+  state.page=1; render();
+});
+
+$('#btnQuery').addEventListener('click', ()=>{ state.page=1; render(); });
+
+$('#btnReset').addEventListener('click', ()=>{
+  state.year='all'; state.track=0; state.tier='all'; state.prov='all'; state.city='all';
+  state.school=''; state.major='';
+  state.myScore=null; state.myRank=null; state.zone='can'; state.view='major';
+  state.sort={k:'rank',d:1}; state.page=1;
+  $('#qSchool').value=''; $('#qMajor').value=''; $('#qScore').value=''; $('#qRank').value='';
+  fillProv(); fillCity();
+  ['#segYear','#segTrack','#segTier','#segZone','#segView'].forEach(id=>{
+    [...$(id).children].forEach((b,i)=>b.classList.toggle('on', i===0));
+  });
+  render();
+});
+
+document.querySelectorAll('#tbl thead th').forEach(th=>{
+  th.addEventListener('click', ()=>{
+    const k=th.dataset.k;
+    state.sort = {k, d: state.sort.k===k ? -state.sort.d : (k==='score'||k==='rank'?1:-1)};
+    state.page=1; render();
+  });
+});
+
+/* ---------- 数据 ---------- */
+function baseRows(){
+  const s=state, kw=s.major.toLowerCase();
+  return ROWS.filter(r=>
+    (s.year==='all'||r.year===DATA.years[s.year]) &&
+    (s.track==='all'||r.track===DATA.tracks[s.track]) &&
+    (s.tier==='all'||r.tier===TIER[s.tier]) &&
+    (s.prov==='all'||r.prov===s.prov) &&
+    (s.city==='all'||r.city===s.city) &&
+    (!s.school||r.school.includes(s.school)) &&
+    (!kw||r.major.toLowerCase().includes(kw))
+  );
+}
+
+function zoneOf(r){
+  if(!state.myRank || !r.rank) return null;
+  const R=state.myRank, k=r.rank;
+  // 位次比你还靠前 15% 以上的，差得太远，不算「冲」也不打标签
+  if(k < R*0.85) return null;
+  if(k < R)      return 'chong';   // 门槛略高于你：值得冲
+  if(k <= R*1.25) return 'wen';    // 与你相当到低 25%
+  return 'bao';                     // 明显低于你：保底
+}
+
+function filtered(){
+  let out = baseRows();
+  if(state.myRank){
+    if(state.zone==='can')        out = out.filter(r=>zoneOf(r)!==null);
+    else if(state.zone!=='all')   out = out.filter(r=>zoneOf(r)===state.zone);
+  }
+  const {k,d}=state.sort;
+  if(state.myRank && k==='rank' && d===1){
+    const R=state.myRank;
+    // 位次差相同（同一分数档）时，985 优先、分数高的优先，避免同档次内乱序
+    out.sort((a,b)=>
+      Math.abs((a.rank||1e9)-R) - Math.abs((b.rank||1e9)-R) ||
+      TIER.indexOf(a.tier) - TIER.indexOf(b.tier) ||
+      b.score - a.score ||
+      a.school.localeCompare(b.school,'zh'));
+    return out;
+  }
+  out.sort((a,b)=>{
+    let x=a[k], y=b[k];
+    if(k==='tier'){ x=TIER.indexOf(x); y=TIER.indexOf(y); }
+    if(typeof x==='string') return d*x.localeCompare(y,'zh');
+    return d*((x||0)-(y||0));
+  });
+  return out;
+}
+
+/* ---------- 渲染 ---------- */
+function renderBanner(all){
+  const b=$('#banner');
+  if(!state.myRank){
+    if(state.myScore){
+      b.className='banner on';
+      b.innerHTML=`<div class="b1">${Math.round(state.myScore)} 分在 ${DATA.years[segYear()]} 年${DATA.tracks[state.track]}类的一分一段表里没有对应档位</div>
+        <div class="b2">分数可能低于该年份分段表的下限，请检查分数，或把「年份」切到对应年份再看。</div>`;
+    }else{
+      b.className='banner'; b.innerHTML='';
+    }
+    return;
+  }
+  const z={chong:0,wen:0,bao:0}, sc={chong:new Set(),wen:new Set(),bao:new Set()};
+  all.forEach(r=>{ const k=zoneOf(r); if(k){ z[k]++; sc[k].add(r.school); } });
+  const can   = z.chong + z.wen + z.bao;
+  const sure  = z.wen + z.bao;
+  const canS  = new Set([...sc.chong, ...sc.wen, ...sc.bao]).size;
+  const sureS = new Set([...sc.wen, ...sc.bao]).size;
+  const rest  = all.length - can;
+  const yi = DATA.years[segYear()];
+  b.className='banner on';
+  if(can===0){
+    b.innerHTML = `<div class="b1">${state.myScore?Math.round(state.myScore)+' 分 ≈ ':''}<em>${state.myRank.toLocaleString('zh-CN')}</em>名
+        <span class="ys">${yi} 年${DATA.tracks[state.track]}类 · 一分一段表换算</span></div>
+      <div class="b2">按往年位次，这个位次低于当前可选院校所有专业的投档线，<b>没有匹配的可报专业</b>。可以换个科类、放宽院校层次，或把年份切到其他年份看看。</div>`;
+    return;
+  }
+  b.innerHTML = `<div class="b1">${state.myScore?Math.round(state.myScore)+' 分 ≈ ':''}<em>${state.myRank.toLocaleString('zh-CN')}</em>名
+      <span class="ys">${yi} 年${DATA.tracks[state.track]}类 · 一分一段表换算${state.myScore&&state.year==='all'?' · 跨年份以位次为准':''}</span></div>
+    <div class="b2">按往年位次，贴着你的分数值得填的共 <b>${can.toLocaleString('zh-CN')}</b> 个专业 / <b>${canS}</b> 所院校：
+      <button class="zbtn z-chong${state.zone==='chong'?' on':''}" data-z="chong"><i>冲</i> ${z.chong}</button>
+      <button class="zbtn z-wen${state.zone==='wen'?' on':''}" data-z="wen"><i>稳</i> ${z.wen}</button>
+      <button class="zbtn z-bao${state.zone==='bao'?' on':''}" data-z="bao"><i>保</i> ${z.bao}</button>
+      <br>其中「稳 + 保」<b>${sure.toLocaleString('zh-CN')}</b> 个专业、覆盖 <b>${sureS}</b> 所院校${rest>0?`<br><span class="hint">另有 ${rest.toLocaleString('zh-CN')} 个专业位次差距过大</span> <button class="zbtn${state.zone==='all'?' on':''}" data-z="all" style="font-size:12px">查看全部</button>`:''}</div>`;
+  b.querySelectorAll('.zbtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const zz=btn.dataset.z;
+      state.zone = (state.zone===zz) ? 'can' : zz;
+      [...$('#segZone').children].forEach(x=>x.classList.toggle('on', x.dataset.v===state.zone));
+      state.page=1; render();
+    });
+  });
+}
+
+function render(){
+  const all = baseRows();
+  renderBanner(all);
+  const rows = filtered();
+  $('#stCount').textContent = rows.length.toLocaleString('zh-CN');
+  $('#stSchool').textContent = new Set(rows.map(r=>r.school)).size;
+  $('#stTop').textContent = rows.length?Math.max(...rows.map(r=>r.score)):'—';
+  $('#stLow').textContent = rows.length?Math.min(...rows.map(r=>r.score)):'—';
+
+  document.querySelectorAll('#tbl thead th').forEach(th=>{
+    const on = th.dataset.k===state.sort.k;
+    th.classList.toggle('act', on);
+    const ar=th.querySelector('.ar');
+    if(ar) ar.textContent = on ? (state.sort.d>0?'↑':'↓') : '⇅';
+  });
+
+  const bySchool = state.view==='school';
+  $('#wrapMajor').style.display  = bySchool?'none':'';
+  $('#wrapSchool').style.display = bySchool?'':'none';
+
+  if(bySchool) renderSchool(rows); else renderMajor(rows);
+}
+
+function renderMajor(rows){
+  const pages=Math.max(1, Math.ceil(rows.length/PER));
+  if(state.page>pages) state.page=pages;
+  if(!rows.length){
+    $('#tbody').innerHTML=''; $('#pager').innerHTML='';
+    $('#empty').style.display='block';
+    $('#empty').textContent='没有匹配的记录，换个条件试试。';
+    return;
+  }
+  $('#empty').style.display='none';
+  const slice=rows.slice((state.page-1)*PER, state.page*PER);
+  $('#tbody').innerHTML = slice.map((r,i)=>{
+    const z=zoneOf(r);
+    return `<tr class="clickable" data-i="${(state.page-1)*PER+i}">
+      <td>${r.year}</td>
+      <td class="sch"><span class="nm" title="${esc(r.school)}">${esc(r.school)}</span></td>
+      <td class="pv">${esc(r.prov)}</td>
+      <td class="ct">${esc(r.city)}</td>
+      <td><span class="badge b${TIER.indexOf(r.tier)}">${r.tier}</span></td>
+      <td class="mj">${esc(r.major)}${z?`<span class="tag ${ZONE_CLS[z]}">${ZONE_TXT[z]}</span>`:''}</td>
+      <td class="num sc">${r.score}</td>
+      <td class="num">${fmt(r.rank)}</td>
+      <td class="num">${r.plan?r.plan:'—'}</td>
+      ${rateCell(r.rt)}
+    </tr>`;
+  }).join('');
+  $('#tbody').querySelectorAll('tr').forEach(tr=>{
+    tr.addEventListener('click', ()=>detail(rows[+tr.dataset.i]));
+  });
+  renderPager(rows.length, pages);
+}
+
+function aggSchool(rows){
+  const map=new Map();
+  rows.forEach(r=>{
+    let o=map.get(r.school);
+    if(!o){
+      o={school:r.school, tier:r.tier, prov:r.prov, city:r.city, rt:r.rt,
+         year:r.year, score:r.score, rank:r.rank, mjs:new Set()};
+      map.set(r.school, o);
+    }
+    o.mjs.add(r.major);   // 同一专业跨年份不重复计数
+    if(r.score<o.score || (r.score===o.score && r.year>o.year)){
+      o.score=r.score; o.rank=r.rank; o.year=r.year;
+    }
+  });
+  const list=[...map.values()];
+  if(state.myRank){
+    // 填了分数：离你的位次最近的院校排前面（和专业明细口径一致）
+    const R=state.myRank;
+    list.sort((a,b)=> Math.abs((a.rank||1e9)-R) - Math.abs((b.rank||1e9)-R)
+                     || a.school.localeCompare(b.school,'zh'));
+  }else{
+    list.sort((a,b)=> b.score-a.score || a.school.localeCompare(b.school,'zh'));
+  }
+  return list;
+}
+
+function renderSchool(rows){
+  const list=aggSchool(rows);
+  const pages=Math.max(1, Math.ceil(list.length/PER));
+  if(state.page>pages) state.page=pages;
+  if(!list.length){
+    $('#tbodyS').innerHTML=''; $('#pager').innerHTML='';
+    $('#empty').style.display='block';
+    $('#empty').textContent='没有匹配的院校，换个条件试试。';
+    return;
+  }
+  $('#empty').style.display='none';
+  const slice=list.slice((state.page-1)*PER, state.page*PER);
+  $('#tbodyS').innerHTML = slice.map((o,i)=>{
+    const z=zoneOf(o);
+    return `<tr class="clickable" data-i="${(state.page-1)*PER+i}">
+      <td class="sch"><span class="nm" title="${esc(o.school)}">${esc(o.school)}</span>${z?`<span class="tag ${ZONE_CLS[z]}">${ZONE_TXT[z]}</span>`:''}</td>
+      <td class="pv">${esc(o.prov)}</td>
+      <td class="ct">${esc(o.city)}</td>
+      <td><span class="badge b${TIER.indexOf(o.tier)}">${o.tier}</span></td>
+      <td class="num sc">${o.score}</td>
+      <td class="num">${fmt(o.rank)}</td>
+      <td class="num">${o.mjs.size}</td>
+      ${rateCell(o.rt)}
+      <td class="num">${o.year}</td>
+    </tr>`;
+  }).join('');
+  $('#tbodyS').querySelectorAll('tr').forEach(tr=>{
+    tr.addEventListener('click', ()=>detailSchool(list[+tr.dataset.i].school));
+  });
+  renderPager(list.length, pages);
+}
+
+function renderPager(total, pages){
+  const p=state.page;
+  const box=$('#pager');
+  box.innerHTML=`<button class="pg" ${p===1?'disabled':''} data-g="1">首页</button>
+    <button class="pg" ${p===1?'disabled':''} data-g="${p-1}">上一页</button>
+    <span class="info">第 ${p} / ${pages} 页 · 共 ${total.toLocaleString('zh-CN')} 条</span>
+    <button class="pg" ${p===pages?'disabled':''} data-g="${p+1}">下一页</button>
+    <button class="pg" ${p===pages?'disabled':''} data-g="${pages}">末页</button>`;
+  box.querySelectorAll('.pg').forEach(b=>b.addEventListener('click',()=>{
+    const g=+b.dataset.g;
+    if(g>=1 && g<=pages){ state.page=g; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+  }));
+}
+
+/* ---------- 弹窗 ---------- */
+function detail(r){
+  const same=ROWS.filter(x=>x.school===r.school && x.major===r.major && x.track===r.track)
+                 .sort((a,b)=>a.year-b.year);
+  $('#mTitle').textContent = r.school;
+  $('#mSub').textContent = r.major + ' · ' + r.track + '类 · ' + r.tier + ' · ' + place(r)
+    + ' · 保研率 ' + rateText(r.rt);
+  const rowsHtml = same.map(x=>`<tr>
+      <td>${x.year}</td>
+      <td class="num sc">${x.score}</td>
+      <td class="num">${fmt(x.rank)}</td>
+      <td class="num">${x.plan?x.plan:'—'}</td>
+    </tr>`).join('');
+  let trend='';
+  if(same.length>1){
+    const a=same[0], b=same[same.length-1];
+    const ds=b.score-a.score, dr=(a.rank&&b.rank)?(b.rank-a.rank):null;
+    trend = `<p class="hint" style="margin:12px 0 0">${a.year} → ${b.year}：分数 ${ds>0?'+':''}${ds} 分${dr!==null?`，位次 ${dr>0?'后退':'前进'} ${Math.abs(dr).toLocaleString('zh-CN')} 名`:''}</p>`;
+  }
+  $('#mBody').innerHTML = `<table>
+      <thead><tr><th>年份</th><th style="text-align:right">最低分</th><th style="text-align:right">全省位次</th><th style="text-align:right">招生人数</th></tr></thead>
+      <tbody>${rowsHtml}</tbody></table>${trend}`;
+  $('#mask').classList.add('on');
+}
+
+function detailSchool(name){
+  const years = state.year==='all' ? DATA.years : [DATA.years[state.year]];
+  const rows = ROWS.filter(r=>r.school===name && r.track===DATA.tracks[state.track] && years.includes(r.year))
+                   .sort((a,b)=> a.year-b.year || b.score-a.score);
+  if(!rows.length) return;
+  $('#mTitle').textContent = name;
+  $('#mSub').textContent = place(rows[0]) + ' · ' + DATA.tracks[state.track] + '类 · ' + rows[0].tier
+    + ' · ' + rows.length + ' 个专业条目 · 保研率 ' + rateText(rows[0].rt);
+  const body = rows.map(x=>{
+    const z=zoneOf(x);
+    return `<tr>
+      <td>${x.year}</td>
+      <td>${esc(x.major)}${z?`<span class="tag ${ZONE_CLS[z]}">${ZONE_TXT[z]}</span>`:''}</td>
+      <td class="num sc">${x.score}</td>
+      <td class="num">${fmt(x.rank)}</td>
+      <td class="num">${x.plan?x.plan:'—'}</td>
+    </tr>`;
+  }).join('');
+  $('#mBody').innerHTML = `<table>
+      <thead><tr><th>年份</th><th>专业</th><th style="text-align:right">最低分</th><th style="text-align:right">全省位次</th><th style="text-align:right">招生</th></tr></thead>
+      <tbody>${body}</tbody></table>`;
+  $('#mask').classList.add('on');
+}
+
+$('#btnClose').addEventListener('click', ()=>$('#mask').classList.remove('on'));
+$('#mask').addEventListener('click', e=>{ if(e.target.id==='mask') $('#mask').classList.remove('on'); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') $('#mask').classList.remove('on'); });
+</script>
+</body>
+</html>
